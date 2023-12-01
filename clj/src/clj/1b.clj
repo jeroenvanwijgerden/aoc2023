@@ -1,4 +1,4 @@
-(ns clj.1a
+(ns clj.1b
   (:require [clj.input :as input]))
 
 (defn calibration-value [line]
