@@ -13,18 +13,15 @@
    "eight" "8"
    "nine"  "9"})
 
-(def word-or-digit-at-start (re-pattern (str "^("
-                                             (s/join "|" (concat (keys word->digit)
-                                                                 (vals word->digit)))
-                                             ")")))
+(def word-or-digit (re-pattern (str "(?=("
+                                    (s/join "|" (concat (keys word->digit)
+                                                        (vals word->digit)))
+                                    "))")))
 
 (defn calibration-value [line]
   (->> line
-       (iterate rest)
-       (take-while seq)
-       (map #(apply str %))
-       (keep #(first (re-find word-or-digit-at-start %)))
-       (map #(get word->digit % %))
+       (re-seq word-or-digit)
+       (map (comp #(get word->digit % %) second))
        ((juxt first last))
        (apply str)
        (Integer/parseInt)))
